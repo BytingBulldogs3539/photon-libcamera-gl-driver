@@ -218,27 +218,35 @@ void CameraRunner::start() {
             //         }
             //     }
             // }
-            if (m_copyInput) {
-                int rotationFactor =
-                    (m_rotation == 90 || m_rotation == 270) ? -1 : 0;
-
-                for (int i = 0; i < bound; i++) {
-                    int sourceIndex = i * 4;
-
-                    int row = m_height - 1 - (i / m_width);
-                    int col = i % m_width;
-                    int destinationIndex =
-                        (row + col * m_height + rotationFactor) * 3;
-
-                    uint8x16_t pixels = vld1q_u8(input_ptr + sourceIndex);
-                    vst1q_u8(color_out_buf + destinationIndex, pixels);
-                }
-            }
 
             if (m_copyOutput) {
-                for (int i = 0; i < bound; i++) {
-                    processed_out_buf[i] = input_ptr[i * 4 + 3];
-                }
+                if (m_rotation == 90 || m_rotation == 270) {
+            for (int i = 0; i < bound; i += 4) {
+                int srcIndex = i * 4;
+                int destIndex0 = ((m_height - 1 - (i / m_width)) + ((i % m_width) * m_height)) * 3;
+                int destIndex1 = destIndex0 + 3;
+                int destIndex2 = destIndex0 + 6;
+                int destIndex3 = destIndex0 + 9;
+
+                std::memcpy(color_out_buf + destIndex0, input_ptr + srcIndex, 3);
+                std::memcpy(color_out_buf + destIndex1, input_ptr + srcIndex + 3, 3);
+                std::memcpy(color_out_buf + destIndex2, input_ptr + srcIndex + 6, 3);
+                std::memcpy(color_out_buf + destIndex3, input_ptr + srcIndex + 9, 3);
+            }
+        } else {
+            for (int i = 0; i < bound; i += 4) {
+                int srcIndex = i * 4;
+                int destIndex0 = i * 3;
+                int destIndex1 = destIndex0 + 3;
+                int destIndex2 = destIndex0 + 6;
+                int destIndex3 = destIndex0 + 9;
+
+                std::memcpy(color_out_buf + destIndex0, input_ptr + srcIndex, 3);
+                std::memcpy(color_out_buf + destIndex1, input_ptr + srcIndex + 3, 3);
+                std::memcpy(color_out_buf + destIndex2, input_ptr + srcIndex + 6, 3);
+                std::memcpy(color_out_buf + destIndex3, input_ptr + srcIndex + 9, 3);
+            }
+        }
             }
 
             {
