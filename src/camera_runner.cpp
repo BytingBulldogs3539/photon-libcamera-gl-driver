@@ -200,14 +200,23 @@ void CameraRunner::start() {
                 //     std::memcpy(color_out_buf + i * 3, input_ptr + i * 4, 3);
                 // }
                 //Hard code 90 degree rotation
-                for (int x = 0; x < m_width; x++) {
-                    for (int y = 0; y < m_height; y++) {
 
-                        int i = x + y * m_width;
-                        int o = (m_height-1-y) + (x * m_height);
-                        std::memcpy(color_out_buf + o * 3, input_ptr + i * 4, 3);
-                    }
+                for (int i = 0; i < bound; i++) {
+                    int x = i%(m_height-1);
+                    int y = i/m_width;
+                    int i = x + y * m_width;
+                    int o = (m_height-1-y) + (x * m_height);
+                    std::memcpy(color_out_buf + i * 3, input_ptr + i * 4, 3);
                 }
+
+                // for (int x = 0; x < m_width; x++) {
+                //     for (int y = 0; y < m_height; y++) {
+
+                //         int i = x + y * m_width;
+                //         int o = (m_height-1-y) + (x * m_height);
+                //         std::memcpy(color_out_buf + o * 3, input_ptr + i * 4, 3);
+                //     }
+                // }
             }
 
             if (m_copyOutput) {
