@@ -226,9 +226,9 @@ void CameraRunner::start() {
                         int destIndex0 = ((m_height - 1 - (i / m_width)) +
                                           ((i % m_width) * m_height)) *
                                          3;
-                        int destIndex1 = destIndex0 + 3;
-                        int destIndex2 = destIndex0 + 6;
-                        int destIndex3 = destIndex0 + 9;
+                        int destIndex1 = destIndex0 - 3;
+                        int destIndex2 = destIndex0 - 6;
+                        int destIndex3 = destIndex0 - 9;
 
                         std::memcpy(color_out_buf + destIndex0,
                                     input_ptr + srcIndex, 3);
