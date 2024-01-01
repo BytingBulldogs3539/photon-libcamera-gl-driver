@@ -42,7 +42,7 @@ target_include_directories(photonlibcamera PUBLIC include ${OPENGL_INCLUDE_DIRS}
         ${LIBGBM_INCLUDE_DIRS} ${OpenCV_INCLUDE_DIRS} ${JNI_INCLUDE_DIRS})
 target_link_libraries(photonlibcamera PUBLIC OpenGL::GL OpenGL::EGL Threads::Threads ${LIBCAMERA_LINK_LIBRARIES}
         ${LIBGBM_LINK_LIBRARIES} ${OpenCV_LIBS} ${LIBDRM_LINK_LIBRARIES})
-target_compile_options(photonlibcamera PRIVATE -Wall -Wextra -Wpedantic -Werror)
+target_compile_options(photonlibcamera PRIVATE -Wall -Wextra -Wpedantic -Werror -fPIC)
 
 add_executable(libcamera_meme main.cpp)
 target_include_directories(libcamera_meme PUBLIC ${OPENGL_INCLUDE_DIRS} ${LIBDRM_INCLUDE_DIRS} ${LIBCAMERA_INCLUDE_DIRS}
