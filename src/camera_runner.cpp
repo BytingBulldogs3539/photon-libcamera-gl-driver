@@ -176,7 +176,7 @@ void CameraRunner::start() {
                 // If we need to rotate it an additional 90 degree
                 // from the cameras rotation create a rotated mat. (for example
                 // from 0 to 90 or 180 to 270)
-                auto mat_pair = MatPair(m_height, m_width);
+                mat_pair = MatPair(m_height, m_width);
             }
 
             // Save the current shader idx
