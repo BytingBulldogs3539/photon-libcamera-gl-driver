@@ -224,10 +224,11 @@ void CameraRunner::start() {
 
                 for (int i = 0; i < bound; i++) {
                     int sourceIndex = i * 4;
+
+                    int row = m_height - 1 - (i / m_width);
+                    int col = i % m_width;
                     int destinationIndex =
-                        ((m_height - 1 - (i / m_width)) +
-                         ((i % m_width) * m_height + rotationFactor)) *
-                        3;
+                        (row + col * m_height + rotationFactor) * 3;
 
                     uint8x16_t pixels = vld1q_u8(input_ptr + sourceIndex);
                     vst1q_u8(color_out_buf + destinationIndex, pixels);
