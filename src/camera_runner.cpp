@@ -50,9 +50,9 @@ static double approxRollingAverage(double avg, double new_sample) {
 CameraRunner::CameraRunner(int width, int height, int rotation,
                            std::shared_ptr<libcamera::Camera> cam)
     : m_camera(std::move(cam)), m_width(width), m_height(height),
-      grabber(m_camera, m_width, m_height, m_rotation(rotation)),
+      grabber(m_camera, m_width, m_height, rotation),
       m_thresholder(m_width, m_height), allocer("/dev/dma_heap/linux,cma") {
-
+    m_rotation = rotation;
     grabber.setOnData(
         [&](libcamera::Request *request) { camera_queue.push(request); });
 
@@ -171,14 +171,12 @@ void CameraRunner::start() {
             if (data.fd == -1) {
                 break;
             }
-
+            auto mat_pair = MatPair(m_width, m_height);
             if (m_rotation == 90 || m_rotation == 270) {
                 // If we need to rotate it an additional 90 degree
                 // from the cameras rotation create a rotated mat. (for example
                 // from 0 to 90 or 180 to 270)
                 auto mat_pair = MatPair(m_height, m_width);
-            } else {
-                auto mat_pair = MatPair(m_width, m_height);
             }
 
             // Save the current shader idx
