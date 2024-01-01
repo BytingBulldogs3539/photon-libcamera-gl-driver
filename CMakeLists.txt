@@ -22,7 +22,7 @@ if (JNI_FOUND)
     message(STATUS "JNI_INCLUDE_DIRS=${JNI_INCLUDE_DIRS}")
 endif ()
 
-SET(FAST_FLAGS "-Ofast -ftree-vectorize -fopenmp -lomp -fPIC")
+SET(FAST_FLAGS "-Ofast -ftree-vectorize -fopenmp -fPIC")
 add_definitions(${FAST_FLAGS})
 
 

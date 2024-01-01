@@ -219,7 +219,7 @@ void CameraRunner::start() {
             //     }
             // }
             if (m_copyInput) {
-#pragma omp parallel for
+#pragma omp parallel num_threads(4)
                 for (int i = 0; i < bound; i++) {
                     int sourceIndex = i * 4;
                     int destinationIndex;
