@@ -83,7 +83,7 @@ class CameraRunner {
 
     std::thread m_threshold;
     std::shared_ptr<libcamera::Camera> m_camera;
-    int m_width, m_height;
+    int m_width, m_height, m_rotation;
 
     CameraGrabber grabber;
     ConcurrentBlockingQueue<libcamera::Request *> camera_queue{};
