@@ -30,7 +30,6 @@ using latch = std::latch;
 using latch = Latch;
 #endif
 
-#include <immintrin.h>
 #include <libcamera/control_ids.h>
 #include <libcamera/property_ids.h>
 #include <linux/dma-buf.h>
@@ -227,24 +226,16 @@ void CameraRunner::start() {
                                                 ((i % m_width) * m_height)) *
                                                3;
 
-                        __m128i pixels =
-                            _mm_loadu_si128(reinterpret_cast<const __m128i *>(
-                                input_ptr + sourceIndex));
-                        _mm_storeu_si128(reinterpret_cast<__m128i *>(
-                                             color_out_buf + destinationIndex),
-                                         pixels);
+                        uint8x16_t pixels = vld1q_u8(input_ptr + sourceIndex);
+                        vst1q_u8(color_out_buf + destinationIndex, pixels);
                     }
                 } else {
                     for (int i = 0; i < bound; i++) {
                         int sourceIndex = i * 4;
                         int destinationIndex = i * 3;
 
-                        __m128i pixels =
-                            _mm_loadu_si128(reinterpret_cast<const __m128i *>(
-                                input_ptr + sourceIndex));
-                        _mm_storeu_si128(reinterpret_cast<__m128i *>(
-                                             color_out_buf + destinationIndex),
-                                         pixels);
+                        uint8x16_t pixels = vld1q_u8(input_ptr + sourceIndex);
+                        vst1q_u8(color_out_buf + destinationIndex, pixels);
                     }
                 }
             }
