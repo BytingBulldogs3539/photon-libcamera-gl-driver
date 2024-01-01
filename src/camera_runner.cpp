@@ -172,7 +172,8 @@ void CameraRunner::start() {
                 break;
             }
 
-            auto mat_pair = MatPair(m_width, m_height);
+            //auto mat_pair = MatPair(m_width, m_height);
+            auto mat_pair = MatPair(m_height, m_width);
 
             // Save the current shader idx
             mat_pair.frameProcessingType = static_cast<int32_t>(data.type);
@@ -195,8 +196,17 @@ void CameraRunner::start() {
             }
 
             if (m_copyInput) {
-                for (int i = 0; i < bound; i++) {
-                    std::memcpy(color_out_buf + i * 3, input_ptr + i * 4, 3);
+                // for (int i = 0; i < bound; i++) {
+                //     std::memcpy(color_out_buf + i * 3, input_ptr + i * 4, 3);
+                // }
+                //Hard code 90 degree rotation
+                for (int x = 0; x < m_width; x++) {
+                    for (int y = 0; y < m_height; y++) {
+
+                        int i = x + y * m_width;
+                        int o = x + y * m_height;
+                        std::memcpy(color_out_buf + i * 3, input_ptr + i * 4, 3);
+                    }
                 }
             }
 
