@@ -205,7 +205,7 @@ void CameraRunner::start() {
 
                         int i = x + y * m_width;
                         int o = x + y * m_height;
-                        std::memcpy(color_out_buf + i * 3, input_ptr + i * 4, 3);
+                        std::memcpy(color_out_buf + o * 3, input_ptr + i * 4, 3);
                     }
                 }
             }
