@@ -205,11 +205,11 @@ void CameraRunner::start() {
                     // from the cameras rotation then remap the data. (for
                     // example from 0 to 90 or 180 to 270)
                     for (int i = 0; i < bound; i++) {
-                        std::memcpy(color_out_buf +
-                                        ((m_height - 1 - (i / (m_width))) +
-                                         ((i % (m_width)) * m_height)) *
-                                            3,
-                                    input_ptr + i * 4, 3);
+                    int x = i%(m_height-1);
+                    int y = i/m_width;
+                    //int i = x + y * m_width;
+                    int o = (m_height-1-y) + (x * m_height);
+                    std::memcpy(color_out_buf + o * 3, input_ptr + i * 4, 3);
                     }
                 } else {
                     for (int i = 0; i < bound; i++) {
