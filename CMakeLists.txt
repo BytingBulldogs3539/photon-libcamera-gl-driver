@@ -22,7 +22,7 @@ if (JNI_FOUND)
     message(STATUS "JNI_INCLUDE_DIRS=${JNI_INCLUDE_DIRS}")
 endif ()
 
-SET(FAST_FLAGS "-Ofast -ftree-vectorize -fopenmp -fPIC")
+SET(FAST_FLAGS "-Ofast -ftree-vectorize -fPIC")
 add_definitions(${FAST_FLAGS})
 
 
@@ -41,8 +41,8 @@ target_compile_definitions(photonlibcamera PUBLIC EGL_NO_X11=1)
 target_include_directories(photonlibcamera PUBLIC include ${OPENGL_INCLUDE_DIRS} ${LIBDRM_INCLUDE_DIRS} ${LIBCAMERA_INCLUDE_DIRS}
         ${LIBGBM_INCLUDE_DIRS} ${OpenCV_INCLUDE_DIRS} ${JNI_INCLUDE_DIRS})
 target_link_libraries(photonlibcamera PUBLIC OpenGL::GL OpenGL::EGL Threads::Threads ${LIBCAMERA_LINK_LIBRARIES}
-        ${LIBGBM_LINK_LIBRARIES} ${OpenCV_LIBS} ${LIBDRM_LINK_LIBRARIES} -fopenmp -lgomp)
-target_compile_options(photonlibcamera PRIVATE -Wall -Wextra -Wpedantic -Werror -fPIC)
+        ${LIBGBM_LINK_LIBRARIES} ${OpenCV_LIBS} ${LIBDRM_LINK_LIBRARIES})
+target_compile_options(photonlibcamera PRIVATE -Wall -Wextra -Wpedantic -Werror)
 
 add_executable(libcamera_meme main.cpp)
 target_include_directories(libcamera_meme PUBLIC ${OPENGL_INCLUDE_DIRS} ${LIBDRM_INCLUDE_DIRS} ${LIBCAMERA_INCLUDE_DIRS}
