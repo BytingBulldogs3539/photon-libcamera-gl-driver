@@ -30,6 +30,7 @@ using latch = std::latch;
 using latch = Latch;
 #endif
 
+#include <immintrin.h>
 #include <libcamera/control_ids.h>
 #include <libcamera/property_ids.h>
 #include <linux/dma-buf.h>
@@ -199,22 +200,51 @@ void CameraRunner::start() {
                     throw std::runtime_error("failed to start DMA buf sync");
             }
 
+            // if (m_copyInput) {
+            //     if (m_rotation == 90 || m_rotation == 270) {
+            //         // If we need to rotate it an additional 90 degree
+            //         // from the cameras rotation then remap the data. (for
+            //         // example from 0 to 90 or 180 to 270)
+            //         for (int i = 0; i < bound; i++) {
+            //             std::memcpy(color_out_buf +
+            //                             ((m_height - 1 - (i / (m_width))) +
+            //                              ((i % (m_width)) * m_height)) *
+            //                                 3,
+            //                         input_ptr + i * 4, 3);
+            //         }
+            //     } else {
+            //         for (int i = 0; i < bound; i++) {
+            //             std::memcpy(color_out_buf + i * 3, input_ptr + i * 4,
+            //                         3);
+            //         }
+            //     }
+            // }
             if (m_copyInput) {
                 if (m_rotation == 90 || m_rotation == 270) {
-                    // If we need to rotate it an additional 90 degree
-                    // from the cameras rotation then remap the data. (for
-                    // example from 0 to 90 or 180 to 270)
                     for (int i = 0; i < bound; i++) {
-                        std::memcpy(color_out_buf +
-                                        ((m_height - 1 - (i / (m_width))) +
-                                         ((i % (m_width)) * m_height)) *
-                                            3,
-                                    input_ptr + i * 4, 3);
+                        int sourceIndex = i * 4;
+                        int destinationIndex = ((m_height - 1 - (i / m_width)) +
+                                                ((i % m_width) * m_height)) *
+                                               3;
+
+                        __m128i pixels =
+                            _mm_loadu_si128(reinterpret_cast<const __m128i *>(
+                                input_ptr + sourceIndex));
+                        _mm_storeu_si128(reinterpret_cast<__m128i *>(
+                                             color_out_buf + destinationIndex),
+                                         pixels);
                     }
                 } else {
                     for (int i = 0; i < bound; i++) {
-                        std::memcpy(color_out_buf + i * 3, input_ptr + i * 4,
-                                    3);
+                        int sourceIndex = i * 4;
+                        int destinationIndex = i * 3;
+
+                        __m128i pixels =
+                            _mm_loadu_si128(reinterpret_cast<const __m128i *>(
+                                input_ptr + sourceIndex));
+                        _mm_storeu_si128(reinterpret_cast<__m128i *>(
+                                             color_out_buf + destinationIndex),
+                                         pixels);
                     }
                 }
             }
