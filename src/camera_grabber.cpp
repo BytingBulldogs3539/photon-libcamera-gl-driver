@@ -61,13 +61,8 @@ CameraGrabber::CameraGrabber(std::shared_ptr<libcamera::Camera> camera,
         std::printf("No active areas??\n");
     }
 
-    if (rotation == 90 || rotation == 270) {
-            config->at(0).size.width = height;
-            config->at(0).size.height = width;
-    } else {
-            config->at(0).size.width = width;
-            config->at(0).size.height = height;
-    }
+    config->at(0).size.width = width;
+    config->at(0).size.height = height;
 
 
 
