@@ -219,24 +219,21 @@ void CameraRunner::start() {
             //     }
             // }
             if (m_copyInput) {
-                if (m_rotation == 90 || m_rotation == 270) {
-                    for (int i = 0; i < bound; i++) {
-                        int sourceIndex = i * 4;
-                        int destinationIndex = ((m_height - 1 - (i / m_width)) +
-                                                ((i % m_width) * m_height)) *
-                                               3;
+#pragma omp parallel for
+                for (int i = 0; i < bound; i++) {
+                    int sourceIndex = i * 4;
+                    int destinationIndex;
 
-                        uint8x16_t pixels = vld1q_u8(input_ptr + sourceIndex);
-                        vst1q_u8(color_out_buf + destinationIndex, pixels);
+                    if (m_rotation == 90 || m_rotation == 270) {
+                        destinationIndex = ((m_height - 1 - (i / m_width)) +
+                                            ((i % m_width) * m_height)) *
+                                           3;
+                    } else {
+                        destinationIndex = i * 3;
                     }
-                } else {
-                    for (int i = 0; i < bound; i++) {
-                        int sourceIndex = i * 4;
-                        int destinationIndex = i * 3;
 
-                        uint8x16_t pixels = vld1q_u8(input_ptr + sourceIndex);
-                        vst1q_u8(color_out_buf + destinationIndex, pixels);
-                    }
+                    uint8x16_t pixels = vld1q_u8(input_ptr + sourceIndex);
+                    vst1q_u8(color_out_buf + destinationIndex, pixels);
                 }
             }
 
