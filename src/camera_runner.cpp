@@ -171,13 +171,13 @@ void CameraRunner::start() {
             if (data.fd == -1) {
                 break;
             }
-            auto mat_pair = MatPair(m_width, m_height);
-            if (m_rotation == 90 || m_rotation == 270) {
-                // If we need to rotate it an additional 90 degree
-                // from the cameras rotation create a rotated mat. (for example
-                // from 0 to 90 or 180 to 270)
-                mat_pair = MatPair(m_height, m_width);
-            }
+            auto mat_pair = MatPair(m_height, m_width);
+            // if (m_rotation == 90 || m_rotation == 270) {
+            //     // If we need to rotate it an additional 90 degree
+            //     // from the cameras rotation create a rotated mat. (for example
+            //     // from 0 to 90 or 180 to 270)
+            //     mat_pair = MatPair(m_height, m_width);
+            // }
 
             // Save the current shader idx
             mat_pair.frameProcessingType = static_cast<int32_t>(data.type);
